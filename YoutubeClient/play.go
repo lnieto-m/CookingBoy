@@ -8,10 +8,22 @@ import (
 )
 
 func PlayVideo(URL string, VoiceConn *discordgo.VoiceConnection) {
+	inQueue := 0
+	defer func() {
+		if inQueue == 1 && len(SongsQueues[VoiceConn.ChannelID]) > 0 {
+			go PlayVideo(SongsQueues[VoiceConn.ChannelID][0], VoiceConn)
+			if len(SongsQueues[VoiceConn.ChannelID][1:]) > 0 {
+				SongsQueues[VoiceConn.ChannelID] = SongsQueues[VoiceConn.ChannelID][1:]
+			} else {
+				SongsQueues[VoiceConn.ChannelID] = []string{}
+			}
+		}
+	}()
 	log.Println(VoiceConn.ChannelID)
 	url := getCleannedURL(URL)
 	switch state := IsPlaying[VoiceConn.ChannelID]; state {
 	case false:
+		inQueue = 1
 		IsPlaying[VoiceConn.ChannelID] = true
 		dgvoice.PlayAudioFile(VoiceConn, url, StopPlayerChans[VoiceConn.ChannelID])
 		IsPlaying[VoiceConn.ChannelID] = false

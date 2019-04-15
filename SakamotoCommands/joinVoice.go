@@ -59,7 +59,6 @@ func (S *Sakamoto) getVoiceConn() {
 				log.Println("Error encountered joining voice channel, ", err)
 				return
 			}
-			// S.discordSession.ChannelMessageSend(S.discordMessageCreate.ChannelID, "At your service.")
 		}
 	}
 }
