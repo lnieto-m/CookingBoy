@@ -112,6 +112,24 @@ func GetLinkTitle(service *youtube.Service, part string, id string) (string, err
 	return "", err
 }
 
+func GetImageLink(service *youtube.Service, part string, id string) (string, error) {
+	call := service.Videos.List(part)
+	call = call.Id(id)
+	response, err := call.Do()
+	if err != nil {
+		log.Println(err)
+		return "", err
+	}
+	for _, item := range response.Items {
+		if item.Snippet != nil && item.Snippet.Thumbnails != nil && item.Snippet.Thumbnails.Standard != nil {
+			return item.Snippet.Thumbnails.Standard.Url, err
+		} else {
+			log.Println("No thumbnail found.")
+		}
+	}
+	return "", err
+}
+
 func YoutubeStart() (*youtube.Service, error) {
 	ctx := context.Background()
 

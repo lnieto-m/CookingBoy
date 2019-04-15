@@ -19,6 +19,7 @@ func (S *Sakamoto) getInfoForEmbed() *discordgo.MessageEmbed {
 	content := ""
 	re := regexp.MustCompile(`(?m)v=(\w*)`)
 
+	imgURL := ""
 	titleContent := "No song playing."
 
 	if youtubeclient.NowPlaying != "" {
@@ -27,6 +28,10 @@ func (S *Sakamoto) getInfoForEmbed() *discordgo.MessageEmbed {
 			if err != nil {
 				log.Println(err)
 				return nil
+			}
+			imgURL, err = youtubeclient.GetImageLink(service, "snippet", titleMatch[1])
+			if err != nil {
+				log.Println(err)
 			}
 			titleContent = "[" + title + "](" + youtubeclient.NowPlaying + ")"
 		}
@@ -55,10 +60,17 @@ func (S *Sakamoto) getInfoForEmbed() *discordgo.MessageEmbed {
 		field,
 	}
 
+	image := &discordgo.MessageEmbedThumbnail{
+		URL: imgURL,
+		// Width:  int(imgWidth),
+		// Height: int(imgHeight),
+	}
+
 	message := &discordgo.MessageEmbed{
 		Title:       "Now Playing",
 		Description: titleContent,
 		Fields:      table,
+		Thumbnail:   image,
 	}
 
 	return message
