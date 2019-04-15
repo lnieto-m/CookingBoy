@@ -17,5 +17,6 @@ func PlayVideo(URL string, VoiceConn *discordgo.VoiceConnection) {
 		IsPlaying[VoiceConn.ChannelID] = false
 	case true:
 		SongsQueues[VoiceConn.ChannelID] = append(SongsQueues[VoiceConn.ChannelID], URL)
+		log.Printf("Song queued: %v\n", SongsQueues[VoiceConn.ChannelID])
 	}
 }
