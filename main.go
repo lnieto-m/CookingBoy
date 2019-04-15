@@ -28,10 +28,11 @@ func main() {
 
 	log.Println("Sakamoto at your service.")
 	signals := make(chan os.Signal, 1)
-	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill, syscall.SIGSEGV)
 	<-signals
 
 	discord.Close()
+	log.Println("See you later.")
 }
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -43,15 +44,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
-	// If the message is "ping" reply with "Pong!"
-	if m.Content == "ping" {
-		s.ChannelMessageSend(m.ChannelID, "Pong!")
-	}
 
-	commandArgs := strings.Split(m.Content, " ")
-	if commandArgs[0] == "!oya" {
-		if len(commandArgs[1:]) > 0 {
-			skmt.Execute(commandArgs[1:])
-		}
+	if strings.HasPrefix(m.Content, "s!") {
+		skmt.Execute(m.Content[2:])
 	}
 }
