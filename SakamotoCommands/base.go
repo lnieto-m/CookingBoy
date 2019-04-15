@@ -20,8 +20,10 @@ func Start(s *discordgo.Session, m *discordgo.MessageCreate) Sakamoto {
 	S.discordSession = s
 	S.discordMessageCreate = m
 	S.commandList = map[string]interface{}{
-		"join": func(args []string) { S.joinVoice(args) },
-		"play": func(args []string) { S.play(args) },
+		"join":  func(args []string) { S.joinVoice(args) },
+		"play":  func(args []string) { S.play(args) },
+		"queue": func(args []string) { S.displayQueue(args) },
+		"stop":  func(args []string) { S.stop(args) },
 	}
 	return S
 }
