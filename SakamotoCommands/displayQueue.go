@@ -17,7 +17,7 @@ func (S *Sakamoto) getInfoForEmbed() *discordgo.MessageEmbed {
 	}
 
 	content := ""
-	re := regexp.MustCompile(`(?m)v=(\w*)`)
+	re := regexp.MustCompile(`(?m)v=([\w|-]*)`)
 
 	imgURL := ""
 	titleContent := "No song playing."
@@ -55,6 +55,9 @@ func (S *Sakamoto) getInfoForEmbed() *discordgo.MessageEmbed {
 		Name:  "Next",
 		Value: content,
 	}
+
+	// TODO : ADD PAGINATION
+	log.Println("CONTENT : ", len(content))
 
 	table := []*discordgo.MessageEmbedField{
 		field,

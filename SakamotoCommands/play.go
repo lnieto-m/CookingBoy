@@ -8,7 +8,14 @@ func (S *Sakamoto) play(args []string) {
 	// log.Println(args[0])
 	S.getVoiceConn()
 	if len(args) > 0 {
-		go youtubeclient.PlayVideo(args[0], S.voiceConn)
+		switch checkLinkValidity(args[0]) {
+		case VIDEO:
+			go youtubeclient.PlayVideo(args[0], S.voiceConn)
+		case PLAYLIST:
+			youtubeclient.QueuePlaylist(args[0], S.voiceConn)
+		case NONVALIDLINK:
+			S.discordSession.ChannelMessageSend(S.discordMessageCreate.ChannelID, "Please enter a valid Youtube video or playlist link.")
+		}
 	}
 }
 

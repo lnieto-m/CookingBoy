@@ -123,11 +123,38 @@ func GetImageLink(service *youtube.Service, part string, id string) (string, err
 	for _, item := range response.Items {
 		if item.Snippet != nil && item.Snippet.Thumbnails != nil && item.Snippet.Thumbnails.Standard != nil {
 			return item.Snippet.Thumbnails.Standard.Url, err
-		} else {
-			log.Println("No thumbnail found.")
 		}
 	}
 	return "", err
+}
+
+func GetPlaylistLinks(service *youtube.Service, part string, id string) []string {
+	pageToken := ""
+	hasEntered := 0
+	idLists := []string{}
+	for {
+		// log.Println("Querying list")
+		// hasEntered = 1
+		call := service.PlaylistItems.List(part)
+		call = call.PlaylistId(id)
+		call = call.MaxResults(50)
+		if hasEntered != 0 {
+			call = call.PageToken(pageToken)
+		}
+		response, err := call.Do()
+		if err != nil {
+			log.Println(err)
+			return idLists
+		}
+		pageToken = response.NextPageToken
+		hasEntered = 1
+		for _, items := range response.Items {
+			idLists = append(idLists, items.ContentDetails.VideoId)
+		}
+		if pageToken == "" {
+			return idLists
+		}
+	}
 }
 
 func YoutubeStart() (*youtube.Service, error) {
