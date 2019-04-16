@@ -102,39 +102,35 @@ func handleError(err error, message string) {
 	}
 }
 
-func GetLinkTitle(service *youtube.Service, part string, id string) (string, error) {
-	call := service.Videos.List(part)
-	call = call.Id(id)
-	response, err := call.Do()
-	for _, item := range response.Items {
-		return item.Snippet.Title, err
-	}
-	return "", err
-}
-
-func GetImageLink(service *youtube.Service, part string, id string) (string, error) {
+// GetVideoInfos use a youtube id to return a Video object
+func GetVideoInfos(service *youtube.Service, part string, id string) (Video, error) {
+	video := Video{}
 	call := service.Videos.List(part)
 	call = call.Id(id)
 	response, err := call.Do()
 	if err != nil {
-		log.Println(err)
-		return "", err
+		return video, err
 	}
 	for _, item := range response.Items {
+		video.ID = id
+		video.Title = item.Snippet.Title
+		video.URL = "https://www.youtube.com/watch?v=" + id
+		thumbnail := ""
 		if item.Snippet != nil && item.Snippet.Thumbnails != nil && item.Snippet.Thumbnails.Standard != nil {
-			return item.Snippet.Thumbnails.Standard.Url, err
+			thumbnail = item.Snippet.Thumbnails.Standard.Url
 		}
+		video.ThumbnailImageURL = thumbnail
+		return video, err
 	}
-	return "", err
+	return video, err
 }
 
-func GetPlaylistLinks(service *youtube.Service, part string, id string) []string {
+// GetPlaylistVideos use a playlist id to return a list of Video objects
+func GetPlaylistVideos(service *youtube.Service, part string, id string) []Video {
 	pageToken := ""
 	hasEntered := 0
-	idLists := []string{}
+	idLists := []Video{}
 	for {
-		// log.Println("Querying list")
-		// hasEntered = 1
 		call := service.PlaylistItems.List(part)
 		call = call.PlaylistId(id)
 		call = call.MaxResults(50)
@@ -149,7 +145,17 @@ func GetPlaylistLinks(service *youtube.Service, part string, id string) []string
 		pageToken = response.NextPageToken
 		hasEntered = 1
 		for _, items := range response.Items {
-			idLists = append(idLists, items.ContentDetails.VideoId)
+			thumbnail := ""
+			if items.Snippet != nil && items.Snippet.Thumbnails != nil && items.Snippet.Thumbnails.Standard != nil {
+				thumbnail = items.Snippet.Thumbnails.Standard.Url
+			}
+			video := Video{
+				URL:               "https://www.youtube.com/watch?v=" + items.ContentDetails.VideoId,
+				ThumbnailImageURL: thumbnail,
+				Title:             items.Snippet.Title,
+				ID:                items.ContentDetails.VideoId,
+			}
+			idLists = append(idLists, video)
 		}
 		if pageToken == "" {
 			return idLists
@@ -157,6 +163,7 @@ func GetPlaylistLinks(service *youtube.Service, part string, id string) []string
 	}
 }
 
+// YoutubeStart return a new youtube.service using given credentials
 func YoutubeStart() (*youtube.Service, error) {
 	ctx := context.Background()
 

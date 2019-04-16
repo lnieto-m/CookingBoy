@@ -3,49 +3,26 @@ package sakamotocommands
 import (
 	youtubeclient "CookingBoy/YoutubeClient"
 	"log"
-	"regexp"
 	"strconv"
 
 	"github.com/bwmarrin/discordgo"
 )
 
 func (S *Sakamoto) getInfoForEmbed() *discordgo.MessageEmbed {
-	service, err := youtubeclient.YoutubeStart()
-	if err != nil {
-		log.Println(err)
-		return nil
-	}
 
 	content := ""
-	re := regexp.MustCompile(`(?m)v=([\w|-]*)`)
-
-	imgURL := ""
 	titleContent := "No song playing."
+	image := &discordgo.MessageEmbedThumbnail{}
 
-	if youtubeclient.NowPlaying != "" {
-		for _, titleMatch := range re.FindAllStringSubmatch(youtubeclient.NowPlaying, -1) {
-			title, err := youtubeclient.GetLinkTitle(service, "snippet", titleMatch[1])
-			if err != nil {
-				log.Println(err)
-				return nil
-			}
-			imgURL, err = youtubeclient.GetImageLink(service, "snippet", titleMatch[1])
-			if err != nil {
-				log.Println(err)
-			}
-			titleContent = "[" + title + "](" + youtubeclient.NowPlaying + ")"
+	if youtubeclient.NowPlaying.URL != "" {
+		titleContent = "[" + youtubeclient.NowPlaying.Title + "](" + youtubeclient.NowPlaying.URL + ")"
+		image = &discordgo.MessageEmbedThumbnail{
+			URL: youtubeclient.NowPlaying.ThumbnailImageURL,
 		}
 	}
 
-	for id, rawLink := range youtubeclient.SongsQueues[S.voiceConn.ChannelID] {
-		for _, match := range re.FindAllStringSubmatch(rawLink, -1) {
-			link, err := youtubeclient.GetLinkTitle(service, "snippet", match[1])
-			if err != nil {
-				log.Println(err)
-				return nil
-			}
-			content += strconv.Itoa(id+1) + ". [" + link + "](" + rawLink + ")\n"
-		}
+	for id, videoElem := range youtubeclient.SongsQueues[S.discordMessageCreate.GuildID] {
+		content += strconv.Itoa(id+1) + ". [" + videoElem.Title + "](" + videoElem.URL + ")\n"
 	}
 	if content == "" {
 		content = "No song queued."
@@ -57,16 +34,10 @@ func (S *Sakamoto) getInfoForEmbed() *discordgo.MessageEmbed {
 	}
 
 	// TODO : ADD PAGINATION
-	log.Println("CONTENT : ", len(content))
+	log.Println("CONTENT : ", len(youtubeclient.SongsQueues[S.discordMessageCreate.GuildID]))
 
 	table := []*discordgo.MessageEmbedField{
 		field,
-	}
-
-	image := &discordgo.MessageEmbedThumbnail{
-		URL: imgURL,
-		// Width:  int(imgWidth),
-		// Height: int(imgHeight),
 	}
 
 	message := &discordgo.MessageEmbed{

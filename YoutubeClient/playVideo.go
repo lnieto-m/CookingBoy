@@ -7,34 +7,36 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func PlayVideo(URL string, VoiceConn *discordgo.VoiceConnection) {
+// PlayVideo use a given Video object to play its sounds through the given VoiceConnexion
+func PlayVideo(video Video, VoiceConn *discordgo.VoiceConnection) {
 	inQueue := 0
 
 	defer func() {
-		if inQueue == 1 && len(SongsQueues[VoiceConn.ChannelID]) > 0 {
-			go PlayVideo(SongsQueues[VoiceConn.ChannelID][0], VoiceConn)
-			if len(SongsQueues[VoiceConn.ChannelID][1:]) > 0 {
-				SongsQueues[VoiceConn.ChannelID] = SongsQueues[VoiceConn.ChannelID][1:]
+		if inQueue == 1 && len(SongsQueues[VoiceConn.GuildID]) > 0 {
+			go PlayVideo(SongsQueues[VoiceConn.GuildID][0], VoiceConn)
+			if len(SongsQueues[VoiceConn.GuildID][1:]) > 0 {
+				SongsQueues[VoiceConn.GuildID] = SongsQueues[VoiceConn.GuildID][1:]
 			} else {
-				SongsQueues[VoiceConn.ChannelID] = []string{}
+				SongsQueues[VoiceConn.GuildID] = []Video{}
 			}
 		}
 	}()
 
-	log.Println(VoiceConn.ChannelID)
+	log.Println(VoiceConn.GuildID)
 
-	url := getCleannedURL(URL)
+	url := getCleannedURL(video.URL)
 	log.Println(url)
-	switch state := IsPlaying[VoiceConn.ChannelID]; state {
+
+	switch state := IsPlaying[VoiceConn.GuildID]; state {
 	case false:
 		inQueue = 1
-		IsPlaying[VoiceConn.ChannelID] = true
-		NowPlaying = URL
-		dgvoice.PlayAudioFile(VoiceConn, url, StopPlayerChans[VoiceConn.ChannelID])
-		IsPlaying[VoiceConn.ChannelID] = false
-		NowPlaying = ""
+		IsPlaying[VoiceConn.GuildID] = true
+		NowPlaying = video
+		dgvoice.PlayAudioFile(VoiceConn, url, StopPlayerChans[VoiceConn.GuildID])
+		IsPlaying[VoiceConn.GuildID] = false
+		NowPlaying = Video{}
 	case true:
-		SongsQueues[VoiceConn.ChannelID] = append(SongsQueues[VoiceConn.ChannelID], URL)
-		log.Printf("Song queued: %v\n", SongsQueues[VoiceConn.ChannelID])
+		SongsQueues[VoiceConn.GuildID] = append(SongsQueues[VoiceConn.GuildID], video)
+		log.Printf("Song queued: %v\n", SongsQueues[VoiceConn.GuildID])
 	}
 }

@@ -28,10 +28,10 @@ func (S *Sakamoto) joinVoice(args []string) {
 				return
 			}
 
-			log.Println(S.voiceConn.ChannelID)
-			youtubeclient.StopPlayerChans[S.voiceConn.ChannelID] = make(chan bool, 1)
-			youtubeclient.IsPlaying[S.voiceConn.ChannelID] = false
-			youtubeclient.SongsQueues[S.voiceConn.ChannelID] = []string{}
+			log.Println(S.discordMessageCreate.GuildID)
+			youtubeclient.StopPlayerChans[S.discordMessageCreate.GuildID] = make(chan bool, 1)
+			youtubeclient.IsPlaying[S.discordMessageCreate.GuildID] = false
+			youtubeclient.SongsQueues[S.discordMessageCreate.GuildID] = []youtubeclient.Video{}
 			// S.discordSession.ChannelMessageSend(S.discordMessageCreate.ChannelID, "At your service.")
 		}
 	}
