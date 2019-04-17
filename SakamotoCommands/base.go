@@ -24,6 +24,7 @@ func Start(s *discordgo.Session, m *discordgo.MessageCreate) Sakamoto {
 		"play":  func(args []string) { S.play(args) },
 		"queue": func(args []string) { S.displayQueue(args) },
 		"stop":  func(args []string) { S.stop(args) },
+		"skip":  func(args []string) { S.skip(args) },
 	}
 	return S
 }
@@ -36,7 +37,6 @@ func (S *Sakamoto) Execute(commandInput string) {
 		args = commandList[1:]
 	}
 	if command, ok := S.commandList[commandList[0]]; ok {
-		print(len(commandInput[1:]))
 		command.(func([]string))(args)
 	}
 }

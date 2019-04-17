@@ -3,6 +3,9 @@ package youtubeclient
 // SongsQueues : Current Song queues sorted by server ID.
 var SongsQueues = map[string][]Video{}
 
+// VoiceConnexions : "GuildID" : "VoiceChannel"
+var VoiceConnexions = map[string]string{}
+
 // StopPlayerChans : Store differnt channels for servers
 var StopPlayerChans = map[string]chan bool{}
 

@@ -13,6 +13,7 @@ func PlayVideo(video Video, VoiceConn *discordgo.VoiceConnection) {
 
 	defer func() {
 		if inQueue == 1 && len(SongsQueues[VoiceConn.GuildID]) > 0 {
+			log.Println("lol tmor")
 			go PlayVideo(SongsQueues[VoiceConn.GuildID][0], VoiceConn)
 			if len(SongsQueues[VoiceConn.GuildID][1:]) > 0 {
 				SongsQueues[VoiceConn.GuildID] = SongsQueues[VoiceConn.GuildID][1:]

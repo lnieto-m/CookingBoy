@@ -32,6 +32,7 @@ func (S *Sakamoto) joinVoice(args []string) {
 			youtubeclient.StopPlayerChans[S.discordMessageCreate.GuildID] = make(chan bool, 1)
 			youtubeclient.IsPlaying[S.discordMessageCreate.GuildID] = false
 			youtubeclient.SongsQueues[S.discordMessageCreate.GuildID] = []youtubeclient.Video{}
+			youtubeclient.VoiceConnexions[S.discordMessageCreate.GuildID] = S.voiceConn.ChannelID
 			// S.discordSession.ChannelMessageSend(S.discordMessageCreate.ChannelID, "At your service.")
 		}
 	}

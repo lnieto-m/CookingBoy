@@ -7,6 +7,10 @@ import (
 )
 
 func (S *Sakamoto) play(args []string) {
+	if S.performOriginChannelCheck() == false {
+		S.discordSession.ChannelMessageSend(S.discordMessageCreate.ChannelID, "You must be in my voice channel to use this command.")
+		return
+	}
 	S.getVoiceConn()
 	service, err := youtubeclient.YoutubeStart()
 	if err != nil {
