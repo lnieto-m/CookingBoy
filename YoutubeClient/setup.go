@@ -34,3 +34,5 @@ type QueueMessage struct {
 	PageRange   [][2]int
 	CurrentPage int
 }
+
+var PauseChan = make(chan bool)

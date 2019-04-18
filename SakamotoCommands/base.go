@@ -25,6 +25,9 @@ func Start(s *discordgo.Session, m *discordgo.MessageCreate) Sakamoto {
 		"queue": func(args []string) { S.displayQueue(args) },
 		"stop":  func(args []string) { S.stop(args) },
 		"skip":  func(args []string) { S.skip(args) },
+		"leave": func(args []string) { S.leaveVoice(args) },
+		"help":  func(args []string) { S.help(args) },
+		"sound": func(args []string) { S.soundBox(args) },
 	}
 	return S
 }
