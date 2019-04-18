@@ -16,7 +16,7 @@ var IsPlaying = map[string]bool{}
 var NowPlaying = Video{}
 
 // QueueMessageCache stores the last queue message for pagination
-var QueueMessageCache = []QueueMessage{}
+var QueueMessageCache = []*QueueMessage{}
 
 // Video stores data from Youtube API to limit API requests :^)
 type Video struct {
@@ -27,8 +27,10 @@ type Video struct {
 }
 
 type QueueMessage struct {
-	GuildID   string
-	ChannelID string
-	MessageID string
-	SongList  []string
+	GuildID     string
+	ChannelID   string
+	MessageID   string
+	SongList    []string
+	PageRange   [][2]int
+	CurrentPage int
 }

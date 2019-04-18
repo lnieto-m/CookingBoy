@@ -72,13 +72,33 @@ func (S *Sakamoto) displayQueue(args []string) {
 		log.Println("displayQueue: ", err.Error())
 		return
 	}
+
 	// log.Println(to)
-	if len(total) > 25 {
-		youtubeclient.PushToQueueCache(youtubeclient.QueueMessage{
-			GuildID:   queue.GuildID,
-			ChannelID: queue.ChannelID,
-			MessageID: queue.ID,
-			SongList:  total,
+	pageIndexs := [][2]int{}
+	totalMessageLen, currentPageLen, lastPage, lastID := 0, 0, 0, 0
+	for id, value := range total {
+		totalMessageLen += len(value)
+		currentPageLen += len(value)
+		if currentPageLen > 1024 {
+			pageIndexs = append(pageIndexs, [2]int{lastPage, id})
+			lastPage = id
+			currentPageLen = len(value)
+		}
+		lastID = id
+	}
+
+	if totalMessageLen > 1024 {
+		if currentPageLen > 0 {
+			pageIndexs = append(pageIndexs, [2]int{lastPage, lastID + 1})
+		}
+		log.Printf("%v\n", pageIndexs)
+		youtubeclient.PushToQueueCache(&youtubeclient.QueueMessage{
+			GuildID:     queue.GuildID,
+			ChannelID:   queue.ChannelID,
+			MessageID:   queue.ID,
+			SongList:    total,
+			PageRange:   pageIndexs,
+			CurrentPage: 0,
 		})
 		err = S.discordSession.MessageReactionAdd(queue.ChannelID, queue.ID, "⬅")
 		if err != nil {
