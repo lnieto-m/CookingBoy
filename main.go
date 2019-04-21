@@ -56,11 +56,17 @@ func main() {
 		return
 	}
 
+	stopNowPlaying := make(chan bool, 1)
+
+	go sakamotocommands.UpdateGameStatus(discord, stopNowPlaying)
+
 	log.Println("Sakamoto at your service.")
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill, syscall.SIGSEGV)
 	<-signals
+	stopNowPlaying <- true
 
 	discord.Close()
+	close(stopNowPlaying)
 	log.Println("See you later.")
 }

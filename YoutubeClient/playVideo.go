@@ -33,9 +33,11 @@ func PlayVideo(video Video, VoiceConn *discordgo.VoiceConnection) {
 		inQueue = 1
 		IsPlaying[VoiceConn.GuildID] = true
 		NowPlaying = video
+		NowPlayingChan <- video.Title
 		dgvoice.PlayAudioFile(VoiceConn, url, StopPlayerChans[VoiceConn.GuildID], PauseChan[VoiceConn.GuildID])
 		IsPlaying[VoiceConn.GuildID] = false
 		NowPlaying = Video{}
+		NowPlayingChan <- ""
 	case true:
 		SongsQueues[VoiceConn.GuildID] = append(SongsQueues[VoiceConn.GuildID], video)
 		log.Printf("Song queued: %v\n", SongsQueues[VoiceConn.GuildID])

@@ -22,6 +22,8 @@ var (
 	PauseChan = map[string]chan bool{}
 
 	PauseStates = map[string]bool{}
+
+	NowPlayingChan = make(chan string, 1)
 )
 
 // Video stores data from Youtube API to limit API requests :^)

@@ -62,18 +62,6 @@ func (S *Sakamoto) displayQueue(args []string) {
 	S.getVoiceConn()
 	message, total := S.getInfoForEmbed()
 
-	log.Printf("%v\n", len(message.Fields))
-	for _, item := range message.Fields {
-		log.Printf("n: %v v: %v%v\n", item.Name, item.Value, len(item.Value))
-	}
-
-	queue, err := S.discordSession.ChannelMessageSendEmbed(S.discordMessageCreate.ChannelID, message)
-	if err != nil {
-		log.Println("displayQueue: ", err.Error())
-		return
-	}
-
-	// log.Println(to)
 	pageIndexs := [][2]int{}
 	totalMessageLen, currentPageLen, lastPage, lastID := 0, 0, 0, 0
 	for id, value := range total {
@@ -86,6 +74,24 @@ func (S *Sakamoto) displayQueue(args []string) {
 		}
 		lastID = id
 	}
+
+	if totalMessageLen > 1024 {
+		totalPageCounter := len(pageIndexs)
+		if currentPageLen > 0 {
+			totalPageCounter++
+		}
+		message.Footer = &discordgo.MessageEmbedFooter{
+			Text: "Page (1/" + strconv.Itoa(totalPageCounter) + ")",
+		}
+	}
+
+	queue, err := S.discordSession.ChannelMessageSendEmbed(S.discordMessageCreate.ChannelID, message)
+	if err != nil {
+		log.Println("displayQueue: ", err.Error())
+		return
+	}
+
+	// log.Println(to)
 
 	if totalMessageLen > 1024 {
 		if currentPageLen > 0 {

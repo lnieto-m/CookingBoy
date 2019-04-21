@@ -2,6 +2,7 @@ package youtubeclient
 
 import (
 	"log"
+	"strconv"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -32,11 +33,16 @@ func updateQueueVisual(S *discordgo.Session, M *discordgo.MessageReactionAdd, in
 			field,
 		}
 
+		footer := &discordgo.MessageEmbedFooter{
+			Text: "Page (" + strconv.Itoa(message.CurrentPage+1) + "/" + strconv.Itoa(len(message.PageRange)) + ")",
+		}
+
 		editedMessage := &discordgo.MessageEmbed{
 			Title:       "Now Playing",
 			Description: titleContent,
 			Thumbnail:   image,
 			Fields:      fields,
+			Footer:      footer,
 		}
 
 		_, err := S.ChannelMessageEditEmbed(message.ChannelID, message.MessageID, editedMessage)
