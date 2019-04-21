@@ -161,6 +161,8 @@ func PlayAudioFile(v *discordgo.VoiceConnection, filename string, stop <-chan bo
 		return
 	}
 
+	log.Println()
+
 	go func() {
 		for {
 			select {
@@ -221,10 +223,12 @@ func PlayAudioFile(v *discordgo.VoiceConnection, filename string, stop <-chan bo
 	}()
 
 	for {
+		// log.Println("reading...")
 		// read data from ffmpeg stdout
 		audiobuf := make([]int16, frameSize*channels)
 		err = binary.Read(ffmpegbuf, binary.LittleEndian, &audiobuf)
 		if err == io.EOF || err == io.ErrUnexpectedEOF {
+			log.Println(err)
 			return
 		}
 		if err != nil {

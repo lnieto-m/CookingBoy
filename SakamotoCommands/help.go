@@ -4,6 +4,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+// General help message
 func (S *Sakamoto) help(args []string) {
 
 	if len(args) > 0 {
@@ -44,6 +45,7 @@ func (S *Sakamoto) help(args []string) {
 	S.discordSession.ChannelMessageSendEmbed(S.discordMessageCreate.ChannelID, helpMessage)
 }
 
+// SoundBox help message
 func (S *Sakamoto) displaySoundBoxHelp() {
 
 	author := &discordgo.MessageEmbedAuthor{
