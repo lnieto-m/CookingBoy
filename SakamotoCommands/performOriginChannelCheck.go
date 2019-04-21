@@ -5,6 +5,8 @@ import (
 	"log"
 )
 
+// Return true if the user is in the same voice channel than the bot
+// Made to prevent users not in voice channels to break other users music usage
 func (S *Sakamoto) performOriginChannelCheck() bool {
 
 	// Perform Voice Channel connexion test

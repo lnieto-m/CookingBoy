@@ -17,6 +17,9 @@ import (
 	"google.golang.org/api/youtube/v3"
 )
 
+// youtube.go : Base go code to use the youtube API
+// Added some custom methods to retrieve videos and playlist data
+
 const missingClientSecretsMessage = `
 Please configure OAuth 2.0
 `
@@ -183,6 +186,5 @@ func YoutubeStart() (*youtube.Service, error) {
 
 	handleError(err, "Error creating YouTube client")
 
-	//   channelsListByUsername(service, "snippet,contentDetails,statistics", "GoogleDevelopers")
 	return service, err
 }

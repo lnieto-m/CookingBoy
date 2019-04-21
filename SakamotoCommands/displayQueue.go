@@ -8,6 +8,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+// Prepare a *discordgo.MessageEmbed using the stored song queue in SongsQueue[GuildID]
+// Returns a MessageEmbed object, and a []string used to determine if the message will need futur modifications
 func (S *Sakamoto) getInfoForEmbed() (*discordgo.MessageEmbed, []string) {
 
 	stop := 0
@@ -16,6 +18,7 @@ func (S *Sakamoto) getInfoForEmbed() (*discordgo.MessageEmbed, []string) {
 	image := &discordgo.MessageEmbedThumbnail{}
 	linkList := []string{}
 
+	// Get the song currently playing
 	if youtubeclient.NowPlaying.URL != "" {
 		titleContent = "[" + youtubeclient.NowPlaying.Title + "](" + youtubeclient.NowPlaying.URL + ")"
 		image = &discordgo.MessageEmbedThumbnail{
@@ -23,6 +26,9 @@ func (S *Sakamoto) getInfoForEmbed() (*discordgo.MessageEmbed, []string) {
 		}
 	}
 
+	// Get elements in song queue
+	// Only stores up to 1024 characters due to Discord API limit
+	// The whole queue is stored in a []string to perform futur modifications
 	for id, videoElem := range youtubeclient.SongsQueues[S.discordMessageCreate.GuildID] {
 		if stop == 0 {
 			contentToAdd := strconv.Itoa(id+1) + ". [" + videoElem.Title + "](" + videoElem.URL + ")\n"
@@ -57,11 +63,14 @@ func (S *Sakamoto) getInfoForEmbed() (*discordgo.MessageEmbed, []string) {
 	return message, linkList
 }
 
+// Send an Embed message containing current song queue infos retrieved by S.getInfoForEmbed()
+// if the queue is too long to fit in one EmbedMessage arrows reactions will be added to allow a complete view of the song queue
 func (S *Sakamoto) displayQueue(args []string) {
-	log.Println("lol")
+
 	S.getVoiceConn()
 	message, total := S.getInfoForEmbed()
 
+	// Setup Pagination for a long song queue
 	pageIndexs := [][2]int{}
 	totalMessageLen, currentPageLen, lastPage, lastID := 0, 0, 0, 0
 	for id, value := range total {
@@ -85,19 +94,19 @@ func (S *Sakamoto) displayQueue(args []string) {
 		}
 	}
 
+	// Send the created EmbedMessage
 	queue, err := S.discordSession.ChannelMessageSendEmbed(S.discordMessageCreate.ChannelID, message)
 	if err != nil {
 		log.Println("displayQueue: ", err.Error())
 		return
 	}
 
-	// log.Println(to)
-
+	// Stores queue message in a cache if the message is longer than 1024 characters
+	// Then add arrow reactions
 	if totalMessageLen > 1024 {
 		if currentPageLen > 0 {
 			pageIndexs = append(pageIndexs, [2]int{lastPage, lastID + 1})
 		}
-		log.Printf("%v\n", pageIndexs)
 		youtubeclient.PushToQueueCache(&youtubeclient.QueueMessage{
 			GuildID:     queue.GuildID,
 			ChannelID:   queue.ChannelID,
@@ -106,10 +115,9 @@ func (S *Sakamoto) displayQueue(args []string) {
 			PageRange:   pageIndexs,
 			CurrentPage: 0,
 		})
-		err = S.discordSession.MessageReactionAdd(queue.ChannelID, queue.ID, "⬅")
-		if err != nil {
-			log.Println("Emoji ", err)
-		}
+
+		// Adding arrow reactions
+		S.discordSession.MessageReactionAdd(queue.ChannelID, queue.ID, "⬅")
 		S.discordSession.MessageReactionAdd(queue.ChannelID, queue.ID, "➡")
 	}
 

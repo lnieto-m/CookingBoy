@@ -1,13 +1,16 @@
 package sakamotocommands
 
-// VIDEO const
-const VIDEO = 1
+// Constant used to determine the validity of a youtube link
+const (
+	// VIDEO const
+	VIDEO = 1
 
-// PLAYLIST const
-const PLAYLIST = 2
+	// PLAYLIST const
+	PLAYLIST = 2
 
-// NONVALIDLINK const
-const NONVALIDLINK = 0
+	// NONVALIDLINK const
+	NONVALIDLINK = 0
+)
 
 // Soundbox : Path map for soundbox -> map[command]path
 var Soundbox = map[string]string{

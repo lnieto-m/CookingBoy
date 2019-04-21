@@ -6,11 +6,7 @@ import (
 	"github.com/otium/ytdl"
 )
 
-// func QueueSongs(service *youtube.Service, URL string) {
-// 	call := service.Videos.List("")
-// 	call.
-// }
-
+// Use the otium/ytdl package to get a direct link to the mp4 file of a youtube video
 func getCleannedURL(URL string) string {
 	video, err := ytdl.GetVideoInfo(URL)
 

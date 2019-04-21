@@ -18,8 +18,12 @@ func (S *Sakamoto) play(args []string) {
 		return
 	}
 	if len(args) > 0 {
+
+		// Check if either a video, playlist or something else
 		switch checkLinkValidity(args[0]) {
 		case VIDEO:
+
+			// If a video, get the video id using a regex then calls the youtube API to get other infos needed
 			re := regexp.MustCompile(`(?m)v=([\w|-]*)`)
 			id := ""
 			for _, idMatch := range re.FindAllStringSubmatch(args[0], -1) {
@@ -32,13 +36,18 @@ func (S *Sakamoto) play(args []string) {
 			}
 			go youtubeclient.PlayVideo(video, S.voiceConn)
 		case PLAYLIST:
+
+			// if a playlist, calls the youtube API to get all the playlist song infos then stores it
 			youtubeclient.QueuePlaylist(args[0], S.voiceConn)
 		case NONVALIDLINK:
+
+			// Send an error message to the server
 			S.discordSession.ChannelMessageSend(S.discordMessageCreate.ChannelID, "Please enter a valid Youtube video or playlist link.")
 		}
 	}
 }
 
+// Stop all the music functions, clearing song queues and stopping song playing
 func (S *Sakamoto) stop(args []string) {
 	S.getVoiceConn()
 	youtubeclient.SongsQueues[S.discordMessageCreate.GuildID] = []youtubeclient.Video{}

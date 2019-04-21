@@ -5,6 +5,7 @@ import (
 	"log"
 )
 
+// Check the VoiceConnections map to get the voice connection corresponding to the current server
 func (S *Sakamoto) getVoiceConn() {
 	ok := false
 	if S.voiceConn, ok = S.discordSession.VoiceConnections[S.discordMessageCreate.GuildID]; ok {
@@ -13,6 +14,7 @@ func (S *Sakamoto) getVoiceConn() {
 	log.Println("Error encountered joining voice channel, ")
 }
 
+// Leave voice, stopping all the music processes
 func (S *Sakamoto) leaveVoice(args []string) {
 	if S.performOriginChannelCheck() == false {
 		S.discordSession.ChannelMessageSend(S.discordMessageCreate.ChannelID, "You must be in my voice channel to use this command.")
@@ -23,6 +25,8 @@ func (S *Sakamoto) leaveVoice(args []string) {
 	S.voiceConn.Disconnect()
 }
 
+// The bot join the User's voice channel
+// Does nothing if the user is not in a voice channel
 func (S *Sakamoto) joinVoice(args []string) {
 	channelOrigin, err := S.discordSession.State.Channel(S.discordMessageCreate.ChannelID)
 	if err != nil {
@@ -36,8 +40,6 @@ func (S *Sakamoto) joinVoice(args []string) {
 		return
 	}
 
-	log.Println("Origin :", channelOrigin.ID, "Guild: ", guild.ID)
-
 	for _, vs := range guild.VoiceStates {
 		if vs.UserID == S.discordMessageCreate.Author.ID {
 			S.voiceConn, err = S.discordSession.ChannelVoiceJoin(guild.ID, vs.ChannelID, false, false)
@@ -46,14 +48,16 @@ func (S *Sakamoto) joinVoice(args []string) {
 				return
 			}
 
-			log.Println(S.discordMessageCreate.GuildID)
+			// Setup all the globals map entry corresponding to this server(Guild)
 			youtubeclient.StopPlayerChans[S.discordMessageCreate.GuildID] = make(chan bool, 1)
 			youtubeclient.IsPlaying[S.discordMessageCreate.GuildID] = false
 			youtubeclient.SongsQueues[S.discordMessageCreate.GuildID] = []youtubeclient.Video{}
 			youtubeclient.VoiceConnexions[S.discordMessageCreate.GuildID] = S.voiceConn.ChannelID
 			youtubeclient.PauseChan[S.discordMessageCreate.GuildID] = make(chan bool, 1)
 			youtubeclient.PauseStates[S.discordMessageCreate.GuildID] = false
-			// S.discordSession.ChannelMessageSend(S.discordMessageCreate.ChannelID, "At your service.")
+			S.discordSession.ChannelMessageSend(S.discordMessageCreate.ChannelID, "At your service.")
+
+			log.Println("Joined channel " + vs.ChannelID + " in server ID: " + S.discordMessageCreate.GuildID)
 		}
 	}
 }

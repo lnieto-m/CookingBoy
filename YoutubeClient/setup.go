@@ -19,10 +19,16 @@ var (
 	// QueueMessageCache stores the last queue message for pagination
 	QueueMessageCache = []*QueueMessage{}
 
+	// PauseChan allow the communication between the user and the ffmpeg process
+	// send True to halt the process and false to resume it
 	PauseChan = map[string]chan bool{}
 
+	// PauseStates stores the states of pause
+	// True if the song player is paused else false
 	PauseStates = map[string]bool{}
 
+	// NowPlayingChan receive the song currently playing to display it in the 'Playing ... ' message of a discord user
+	// This channel is binded to the sakamotocommands.UpdateGameStatus method and should be used only by this function
 	NowPlayingChan = make(chan string, 1)
 )
 
@@ -34,6 +40,7 @@ type Video struct {
 	ID                string
 }
 
+// QueueMessage stores data for a queue message to allow futur modifications through arrow emojis reactions
 type QueueMessage struct {
 	GuildID     string
 	ChannelID   string

@@ -12,6 +12,8 @@ import (
 func PlayVideo(video Video, VoiceConn *discordgo.VoiceConnection) {
 	inQueue := 0
 
+	// When the current song ends, check the next one in queue and plays it if it exists
+	// This allow an automatic looping through song queue
 	defer func() {
 		if inQueue == 1 && len(SongsQueues[VoiceConn.GuildID]) > 0 {
 			go PlayVideo(SongsQueues[VoiceConn.GuildID][0], VoiceConn)
@@ -23,11 +25,12 @@ func PlayVideo(video Video, VoiceConn *discordgo.VoiceConnection) {
 		}
 	}()
 
-	log.Println(VoiceConn.GuildID)
-
+	// Get the direct mp4 url for a youtube link
 	url := getCleannedURL(video.URL)
-	log.Println(url)
 
+	// This switch check if a song is currently playing in this server
+	// If not, plays the given song link
+	// Else queue it
 	switch state := IsPlaying[VoiceConn.GuildID]; state {
 	case false:
 		inQueue = 1

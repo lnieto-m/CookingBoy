@@ -6,15 +6,18 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+// base.go : Base setup to use the Bot commands
+
 // Sakamoto : Base struct
 type Sakamoto struct {
-	commandList          map[string]interface{}
-	discordSession       *discordgo.Session
-	discordMessageCreate *discordgo.MessageCreate
-	voiceConn            *discordgo.VoiceConnection
+	commandList          map[string]interface{}     // command list [commandName] - > corresponding function
+	discordSession       *discordgo.Session         // Current discord session
+	discordMessageCreate *discordgo.MessageCreate   // Stored message create event
+	voiceConn            *discordgo.VoiceConnection // Stored current voice connexion
 }
 
 // Start : base setup
+// Stores current session, message event and avalaible commands then return a Sakamoto object
 func Start(s *discordgo.Session, m *discordgo.MessageCreate) Sakamoto {
 	S := Sakamoto{}
 	S.discordSession = s
@@ -34,6 +37,7 @@ func Start(s *discordgo.Session, m *discordgo.MessageCreate) Sakamoto {
 }
 
 // Execute : execute a given command and args
+// Inspect the command map to get the corresponding function else does nothing
 func (S *Sakamoto) Execute(commandInput string) {
 	commandList := strings.Split(commandInput, " ")
 	args := []string{}

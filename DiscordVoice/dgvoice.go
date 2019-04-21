@@ -179,7 +179,6 @@ func PlayAudioFile(v *discordgo.VoiceConnection, filename string, stop <-chan bo
 					}
 				}
 			case <-pauseStop:
-				log.Println("dgvoice pause handler stopped")
 				return
 			}
 		}

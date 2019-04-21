@@ -2,11 +2,14 @@ package sakamotocommands
 
 import youtubeclient "CookingBoy/YoutubeClient"
 
+// One day
 func (S *Sakamoto) volume(args []string) {
 	// One day i'll find Da Wae
 	// S.discordSession.VoiceConnections[]
 }
 
+// Pause the song playing by halting the ffmpeg process
+// Also used to pause the song playing when using the soundbox
 func (S *Sakamoto) pause(args []string) {
 	if youtubeclient.IsPlaying[S.discordMessageCreate.GuildID] {
 		if youtubeclient.PauseStates[S.discordMessageCreate.GuildID] {
@@ -17,5 +20,4 @@ func (S *Sakamoto) pause(args []string) {
 			youtubeclient.PauseStates[S.discordMessageCreate.GuildID] = true
 		}
 	}
-
 }

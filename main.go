@@ -14,16 +14,20 @@ import (
 
 func reactionsHandler(s *discordgo.Session, m *discordgo.MessageReactionAdd) {
 
+	// Get the message where the reactions were added
 	message, err := s.ChannelMessage(m.ChannelID, m.MessageID)
 	if err != nil {
 		log.Println(err)
 		return
 	}
+
+	// Only handle other users reactions
+	// prevent the auto remove when adding the base reactions to a queue message
 	if message.Author.ID != s.State.User.ID || m.UserID == s.State.User.ID {
 		return
 	}
+
 	// Check if can find queue message in cache
-	// s.State.User.ID != m.UserID
 	youtubeclient.ManageQueuePage(s, m)
 }
 
@@ -31,10 +35,12 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	skmt := sakamotocommands.Start(s, m)
 
+	// Ignore self message
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
 
+	// 's!' base prefix for commands
 	if strings.HasPrefix(m.Content, "s!") {
 		skmt.Execute(m.Content[2:])
 	}
@@ -58,6 +64,7 @@ func main() {
 
 	stopNowPlaying := make(chan bool, 1)
 
+	// Start the routine handling the 'Playing ...' display message
 	go sakamotocommands.UpdateGameStatus(discord, stopNowPlaying)
 
 	log.Println("Sakamoto at your service.")

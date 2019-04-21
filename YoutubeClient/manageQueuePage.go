@@ -7,6 +7,9 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+// Create an embed Message to send it using the EditMessage Fuction
+// Similar to sakamoto.getInfoForEmbed() method (merge possible ?)
+// This one needs a starting point to get the corresponding queue page
 func updateQueueVisual(S *discordgo.Session, M *discordgo.MessageReactionAdd, index int, message *QueueMessage) {
 	titleContent := "No song playing."
 	image := &discordgo.MessageEmbedThumbnail{}
@@ -15,6 +18,8 @@ func updateQueueVisual(S *discordgo.Session, M *discordgo.MessageReactionAdd, in
 		for _, value := range message.SongList[message.PageRange[index][0]:message.PageRange[index][1]] {
 			content += value
 		}
+
+		// Update the page index
 		message.CurrentPage = index
 
 		if NowPlaying.URL != "" {
@@ -52,6 +57,9 @@ func updateQueueVisual(S *discordgo.Session, M *discordgo.MessageReactionAdd, in
 	}
 }
 
+// ManageQueuePage edits an embed message using the QueueCache
+// Needed to display a oong song queue
+// Arrows emoji let the user navigate through the song queue
 func ManageQueuePage(S *discordgo.Session, M *discordgo.MessageReactionAdd) {
 	if M.Emoji.Name == "⬅" || M.Emoji.Name == "➡" {
 		for _, cacheMessage := range QueueMessageCache {
@@ -64,6 +72,8 @@ func ManageQueuePage(S *discordgo.Session, M *discordgo.MessageReactionAdd) {
 				}
 			}
 		}
+
+		// Remove reactions added by users (except the bot itself) to allow multiple uses
 		err := S.MessageReactionRemove(M.ChannelID, M.MessageReaction.MessageID, M.Emoji.Name, M.UserID)
 		if err != nil {
 			log.Println(err)
