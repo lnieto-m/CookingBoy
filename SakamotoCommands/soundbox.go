@@ -1,7 +1,8 @@
 package sakamotocommands
 
 import (
-	"github.com/bwmarrin/dgvoice"
+	dgvoice "CookingBoy/DiscordVoice"
+	"time"
 )
 
 func (S *Sakamoto) soundBox(args []string) {
@@ -10,7 +11,11 @@ func (S *Sakamoto) soundBox(args []string) {
 	}
 	if path, ok := Soundbox[args[0]]; ok {
 		S.getVoiceConn()
-		dgvoice.PlayAudioFile(S.voiceConn, path, nil)
+		S.pause(nil)
+		time.Sleep(750 * time.Millisecond)
+		dgvoice.PlayAudioFile(S.voiceConn, path, nil, nil)
+		time.Sleep(250 * time.Millisecond)
+		S.pause(nil)
 		return
 	}
 	S.displaySoundBoxHelp()

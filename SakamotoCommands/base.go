@@ -28,6 +28,7 @@ func Start(s *discordgo.Session, m *discordgo.MessageCreate) Sakamoto {
 		"leave": func(args []string) { S.leaveVoice(args) },
 		"help":  func(args []string) { S.help(args) },
 		"sound": func(args []string) { S.soundBox(args) },
+		"pause": func(args []string) { S.pause(args) },
 	}
 	return S
 }
