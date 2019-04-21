@@ -3,7 +3,8 @@ package youtubeclient
 import (
 	"log"
 
-	"github.com/bwmarrin/dgvoice"
+	dgvoice "CookingBoy/DiscordVoice"
+
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -32,7 +33,7 @@ func PlayVideo(video Video, VoiceConn *discordgo.VoiceConnection) {
 		inQueue = 1
 		IsPlaying[VoiceConn.GuildID] = true
 		NowPlaying = video
-		dgvoice.PlayAudioFile(VoiceConn, url, StopPlayerChans[VoiceConn.GuildID])
+		dgvoice.PlayAudioFile(VoiceConn, url, StopPlayerChans[VoiceConn.GuildID], PauseChan[VoiceConn.GuildID])
 		IsPlaying[VoiceConn.GuildID] = false
 		NowPlaying = Video{}
 	case true:

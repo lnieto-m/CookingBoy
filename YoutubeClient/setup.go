@@ -1,22 +1,28 @@
 package youtubeclient
 
-// SongsQueues : Current Song queues sorted by server ID.
-var SongsQueues = map[string][]Video{}
+var (
+	// SongsQueues : Current Song queues sorted by server ID.
+	SongsQueues = map[string][]Video{}
 
-// VoiceConnexions : "GuildID" : "VoiceChannel"
-var VoiceConnexions = map[string]string{}
+	// VoiceConnexions : "GuildID" : "VoiceChannel"
+	VoiceConnexions = map[string]string{}
 
-// StopPlayerChans : Store differnt channels for servers
-var StopPlayerChans = map[string]chan bool{}
+	// StopPlayerChans : Store differnt channels for servers
+	StopPlayerChans = map[string]chan bool{}
 
-// IsPlaying : Player state
-var IsPlaying = map[string]bool{}
+	// IsPlaying : Player state
+	IsPlaying = map[string]bool{}
 
-// NowPlaying : link to current song playing or empty if no song
-var NowPlaying = Video{}
+	// NowPlaying : link to current song playing or empty if no song
+	NowPlaying = Video{}
 
-// QueueMessageCache stores the last queue message for pagination
-var QueueMessageCache = []*QueueMessage{}
+	// QueueMessageCache stores the last queue message for pagination
+	QueueMessageCache = []*QueueMessage{}
+
+	PauseChan = map[string]chan bool{}
+
+	PauseStates = map[string]bool{}
+)
 
 // Video stores data from Youtube API to limit API requests :^)
 type Video struct {
@@ -34,5 +40,3 @@ type QueueMessage struct {
 	PageRange   [][2]int
 	CurrentPage int
 }
-
-var PauseChan = make(chan bool)
