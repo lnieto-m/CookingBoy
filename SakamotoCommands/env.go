@@ -36,4 +36,5 @@ var Soundbox = map[string]string{
 	"troposphere": "SoundBox/reussite.mp3",
 	"ratz":        "SoundBox/ratz.mp3",
 	"doremi":      "SoundBox/doremi.mp3",
+	"guile":       "SoundBox/guile.mp3",
 }
