@@ -46,12 +46,33 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
+func loadRadio() {
+	ready, readyCount := make(chan bool, 1), 0
+	go youtubeclient.GetRadioLinks("radio.json", ready)
+
+linksLoop:
+	for {
+		select {
+		case <-ready:
+			readyCount++
+			if readyCount == 2 {
+				break linksLoop
+			}
+		}
+	}
+	close(ready)
+}
+
 func main() {
 	discord, err := discordgo.New("Bot NTY2NTUyNDIzOTcyMzM5NzIy.XLGtzA.ktqWKJ6dWudmgiioNT2J_dvpQH8")
 	if err != nil {
 		log.Println("Error creating Discord session, ", err)
 		return
 	}
+
+	log.Print("Loading radios...")
+	loadRadio()
+	log.Println("Done.")
 
 	discord.AddHandler(messageCreate)
 	discord.AddHandler(reactionsHandler)

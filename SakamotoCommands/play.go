@@ -53,8 +53,3 @@ func (S *Sakamoto) stop(args []string) {
 	youtubeclient.SongsQueues[S.discordMessageCreate.GuildID] = []youtubeclient.Video{}
 	youtubeclient.StopPlayerChans[S.discordMessageCreate.GuildID] <- true
 }
-
-func (S *Sakamoto) playWaifu(args []string) {
-	S.getVoiceConn()
-	youtubeclient.GetWaifuStream(S.voiceConn)
-}

@@ -2,16 +2,18 @@ package sakamotocommands
 
 import (
 	youtubeclient "CookingBoy/YoutubeClient"
+	"errors"
 	"log"
 )
 
 // Check the VoiceConnections map to get the voice connection corresponding to the current server
-func (S *Sakamoto) getVoiceConn() {
+func (S *Sakamoto) getVoiceConn() error {
 	ok := false
 	if S.voiceConn, ok = S.discordSession.VoiceConnections[S.discordMessageCreate.GuildID]; ok {
-		return
+		return nil
 	}
-	log.Println("Error encountered joining voice channel, ")
+	log.Println("Error encountered joining voice channel")
+	return errors.New("Error encountered joining voice channel")
 }
 
 // Leave voice, stopping all the music processes

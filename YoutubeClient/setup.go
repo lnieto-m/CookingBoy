@@ -30,6 +30,11 @@ var (
 	// NowPlayingChan receive the song currently playing to display it in the 'Playing ... ' message of a discord user
 	// This channel is binded to the sakamotocommands.UpdateGameStatus method and should be used only by this function
 	NowPlayingChan = make(chan string, 1)
+
+	// LoadedRadios contain direct links readable by ffmpeg for streams
+	// map[radio_name]direct_URL
+	// Arrays should have 3 entries: [0] -> CleannedURL, [1] -> Youtube name of the Stream, [2] -> Embed URL+NAME
+	LoadedRadios = map[string][]string{}
 )
 
 // Video stores data from Youtube API to limit API requests :^)

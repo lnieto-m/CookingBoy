@@ -32,7 +32,7 @@ func Start(s *discordgo.Session, m *discordgo.MessageCreate) Sakamoto {
 		"help":  func(args []string) { S.help(args) },
 		"sound": func(args []string) { S.soundBox(args) },
 		"pause": func(args []string) { S.pause(args) },
-		"radio": func(args []string) { S.playWaifu(args) },
+		"radio": func(args []string) { S.playRadio(args) },
 	}
 	return S
 }
