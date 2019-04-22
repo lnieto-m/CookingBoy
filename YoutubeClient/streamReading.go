@@ -6,11 +6,11 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-// On testing, Now using a preset of radios
-func GetWaifuStream(vc *discordgo.VoiceConnection, directURL string, name string) {
+// PlayStream takes a Stream direct URL and play it with ffmpeg
+func PlayStream(vc *discordgo.VoiceConnection, directURL string, name string) {
 	IsPlaying[vc.GuildID] = true
 	NowPlayingChan <- name
-	dgvoice.PlayAudioFile(vc, directURL, StopPlayerChans[vc.GuildID], nil)
+	dgvoice.PlayAudioFile(vc, directURL, StopPlayerChans[vc.GuildID], PauseChan[vc.GuildID])
 	IsPlaying[vc.GuildID] = false
 	NowPlayingChan <- ""
 }

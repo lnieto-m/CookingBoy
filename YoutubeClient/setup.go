@@ -13,6 +13,9 @@ var (
 	// IsPlaying : Player state
 	IsPlaying = map[string]bool{}
 
+	// IsPlayingSound : Sounds Player state
+	IsPlayingSound = map[string]bool{}
+
 	// NowPlaying : link to current song playing or empty if no song
 	NowPlaying = Video{}
 

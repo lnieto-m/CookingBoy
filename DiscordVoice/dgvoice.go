@@ -41,14 +41,13 @@ var (
 )
 
 // OnError gets called by dgvoice when an error is encountered.
-// By default logs to STDERR
 var OnError = func(str string, err error) {
 	prefix := "dgVoice: " + str
 
 	if err != nil {
-		os.Stderr.WriteString(prefix + ": " + err.Error())
+		log.Println(prefix + ": " + err.Error())
 	} else {
-		os.Stderr.WriteString(prefix)
+		log.Println(prefix)
 	}
 }
 
@@ -161,8 +160,6 @@ func PlayAudioFile(v *discordgo.VoiceConnection, filename string, stop <-chan bo
 		return
 	}
 
-	log.Println()
-
 	go func() {
 		for {
 			select {
@@ -223,12 +220,10 @@ func PlayAudioFile(v *discordgo.VoiceConnection, filename string, stop <-chan bo
 	}()
 
 	for {
-		// log.Println("reading...")
 		// read data from ffmpeg stdout
 		audiobuf := make([]int16, frameSize*channels)
 		err = binary.Read(ffmpegbuf, binary.LittleEndian, &audiobuf)
 		if err == io.EOF || err == io.ErrUnexpectedEOF {
-			log.Println(err)
 			return
 		}
 		if err != nil {

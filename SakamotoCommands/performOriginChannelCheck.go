@@ -10,14 +10,12 @@ import (
 func (S *Sakamoto) performOriginChannelCheck() bool {
 
 	// Perform Voice Channel connexion test
-	voiceID := ""
 	log.Println("performOriginChannelCheck :", youtubeclient.VoiceConnexions[S.discordMessageCreate.GuildID])
 	if voiceID, ok := youtubeclient.VoiceConnexions[S.discordMessageCreate.GuildID]; ok == false {
 		if voiceID == "" {
 		}
 		return false
 	}
-	log.Println(voiceID)
 
 	// Check Guild(Server) existence
 	guild, err := S.discordSession.State.Guild(S.discordMessageCreate.GuildID)

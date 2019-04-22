@@ -11,7 +11,11 @@ func (S *Sakamoto) play(args []string) {
 		S.discordSession.ChannelMessageSend(S.discordMessageCreate.ChannelID, "You must be in my voice channel to use this command.")
 		return
 	}
-	S.getVoiceConn()
+	err := S.getVoiceConn()
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
 	service, err := youtubeclient.YoutubeStart()
 	if err != nil {
 		log.Println(err)
@@ -49,7 +53,11 @@ func (S *Sakamoto) play(args []string) {
 
 // Stop all the music functions, clearing song queues and stopping song playing
 func (S *Sakamoto) stop(args []string) {
-	S.getVoiceConn()
+	err := S.getVoiceConn()
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
 	youtubeclient.SongsQueues[S.discordMessageCreate.GuildID] = []youtubeclient.Video{}
 	youtubeclient.StopPlayerChans[S.discordMessageCreate.GuildID] <- true
 }

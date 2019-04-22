@@ -67,7 +67,12 @@ func (S *Sakamoto) getInfoForEmbed() (*discordgo.MessageEmbed, []string) {
 // if the queue is too long to fit in one EmbedMessage arrows reactions will be added to allow a complete view of the song queue
 func (S *Sakamoto) displayQueue(args []string) {
 
-	S.getVoiceConn()
+	err := S.getVoiceConn()
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+
 	message, total := S.getInfoForEmbed()
 
 	// Setup Pagination for a long song queue

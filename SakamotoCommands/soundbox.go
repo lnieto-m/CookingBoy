@@ -3,6 +3,7 @@ package sakamotocommands
 import (
 	dgvoice "CookingBoy/DiscordVoice"
 	youtubeclient "CookingBoy/YoutubeClient"
+	"log"
 	"time"
 )
 
@@ -13,12 +14,22 @@ func (S *Sakamoto) soundBox(args []string) {
 		return
 	}
 	if path, ok := Soundbox[args[0]]; ok {
-		S.getVoiceConn()
+		if youtubeclient.IsPlayingSound[S.discordMessageCreate.GuildID] {
+			log.Println("Sound already playing.")
+			return
+		}
+		err := S.getVoiceConn()
+		if err != nil {
+			log.Println(err.Error())
+			return
+		}
 		S.pause(nil)
 		if youtubeclient.IsPlaying[S.discordMessageCreate.GuildID] {
 			time.Sleep(750 * time.Millisecond)
 		}
+		youtubeclient.IsPlayingSound[S.discordMessageCreate.GuildID] = true
 		dgvoice.PlayAudioFile(S.voiceConn, path, nil, nil)
+		youtubeclient.IsPlayingSound[S.discordMessageCreate.GuildID] = false
 		if youtubeclient.IsPlaying[S.discordMessageCreate.GuildID] {
 			time.Sleep(250 * time.Millisecond)
 		}

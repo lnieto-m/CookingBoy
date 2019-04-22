@@ -3,6 +3,8 @@ package main
 import (
 	sakamotocommands "CookingBoy/SakamotoCommands"
 	youtubeclient "CookingBoy/YoutubeClient"
+	"encoding/json"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/signal"
@@ -47,15 +49,33 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func loadRadio() {
-	ready, readyCount := make(chan bool, 1), 0
-	go youtubeclient.GetRadioLinks("radio.json", ready)
+	ready, readyCount, readyTotal := make(chan bool, 1), 0, 0
 
+	// Load json containing radio name and their ID
+	// Stored in youtubeclient.LoadedRadios
+	data, err := ioutil.ReadFile("radio.json")
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+	radioMap := make(map[string]string)
+	err = json.Unmarshal(data, &radioMap)
+	if err != nil {
+		log.Println(err.Error())
+		return
+	}
+	for key, value := range radioMap {
+		go youtubeclient.GetLinksFromScript(key, value, ready)
+		readyTotal++
+	}
+
+	// Wait for radio initialization to be complete
 linksLoop:
 	for {
 		select {
 		case <-ready:
 			readyCount++
-			if readyCount == 2 {
+			if readyCount == readyTotal {
 				break linksLoop
 			}
 		}

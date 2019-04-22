@@ -53,6 +53,7 @@ func (S *Sakamoto) joinVoice(args []string) {
 			// Setup all the globals map entry corresponding to this server(Guild)
 			youtubeclient.StopPlayerChans[S.discordMessageCreate.GuildID] = make(chan bool, 1)
 			youtubeclient.IsPlaying[S.discordMessageCreate.GuildID] = false
+			youtubeclient.IsPlayingSound[S.discordMessageCreate.GuildID] = false
 			youtubeclient.SongsQueues[S.discordMessageCreate.GuildID] = []youtubeclient.Video{}
 			youtubeclient.VoiceConnexions[S.discordMessageCreate.GuildID] = S.voiceConn.ChannelID
 			youtubeclient.PauseChan[S.discordMessageCreate.GuildID] = make(chan bool, 1)

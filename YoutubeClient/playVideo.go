@@ -1,8 +1,6 @@
 package youtubeclient
 
 import (
-	"log"
-
 	dgvoice "CookingBoy/DiscordVoice"
 
 	"github.com/bwmarrin/discordgo"
@@ -28,8 +26,6 @@ func PlayVideo(video Video, VoiceConn *discordgo.VoiceConnection) {
 	// Get the direct mp4 url for a youtube link
 	url := getCleannedURL(video.URL)
 
-	log.Println(url)
-
 	// This switch check if a song is currently playing in this server
 	// If not, plays the given song link
 	// Else queue it
@@ -45,6 +41,5 @@ func PlayVideo(video Video, VoiceConn *discordgo.VoiceConnection) {
 		NowPlayingChan <- ""
 	case true:
 		SongsQueues[VoiceConn.GuildID] = append(SongsQueues[VoiceConn.GuildID], video)
-		log.Printf("Song queued: %v\n", SongsQueues[VoiceConn.GuildID])
 	}
 }
