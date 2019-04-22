@@ -25,7 +25,8 @@ go build && ./CookingBoy
 
 ## Basic Usage
 
-```s!<command> <args>```
+```s!<command> <args>```<br>
+Type `s!help` for basic commands
 
 ## Built With
 * [DiscordGo](https://github.com/bwmarrin/discordgo)
