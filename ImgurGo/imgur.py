@@ -5,7 +5,7 @@ import sys
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        return
+        sys.exit(1)
     with open('imgur.json') as json_file:
         data = json.load(json_file)
         client_id = data["id"]
