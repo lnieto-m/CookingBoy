@@ -3,24 +3,15 @@
 Basic Discord Music Bot
 
 ### Prerequisites
-* [ffmpeg](https://ffmpeg.org/download.html)
-* [Go](https://golang.org/doc/install)
+* [Docker](https://www.docker.com/get-started)
 
 ## Install
 
-Clone this repo and make a symbolic link to the `src` directory<br>
-Install needed packages
-```
-go get github.com/bwmarrin/discordgo
-go get layeh.com/gopus
-go get golang.org/x/net/context
-go get golang.org/x/oauth2
-go get golang.org/x/oauth2/google
-go get google.golang.org/api/youtube/v3
-```
+Clone this repo <br>
 Go to your cloned repo and build it
 ```
-go build && ./CookingBoy
+docker build -t cooking_boy .
+docker run -d cooking_boy
 ```
 
 ## Basic Usage
