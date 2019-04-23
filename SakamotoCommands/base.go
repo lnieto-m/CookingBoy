@@ -23,16 +23,19 @@ func Start(s *discordgo.Session, m *discordgo.MessageCreate) Sakamoto {
 	S.discordSession = s
 	S.discordMessageCreate = m
 	S.commandList = map[string]interface{}{
-		"join":  func(args []string) { S.joinVoice(args) },
-		"play":  func(args []string) { S.play(args) },
-		"queue": func(args []string) { S.displayQueue(args) },
-		"stop":  func(args []string) { S.stop(args) },
-		"skip":  func(args []string) { S.skip(args) },
-		"leave": func(args []string) { S.leaveVoice(args) },
-		"help":  func(args []string) { S.help(args) },
-		"sound": func(args []string) { S.soundBox(args) },
-		"pause": func(args []string) { S.pause(args) },
-		"radio": func(args []string) { S.playRadio(args) },
+		"join":         func(args []string) { S.joinVoice(args) },
+		"play":         func(args []string) { S.play(args) },
+		"queue":        func(args []string) { S.displayQueue(args) },
+		"stop":         func(args []string) { S.stop(args) },
+		"skip":         func(args []string) { S.skip(args) },
+		"leave":        func(args []string) { S.leaveVoice(args) },
+		"help":         func(args []string) { S.help(args) },
+		"sound":        func(args []string) { S.soundBox(args) },
+		"pause":        func(args []string) { S.pause(args) },
+		"radio":        func(args []string) { S.playRadio(args) },
+		"search":       func(args []string) { S.search(args) },
+		"search_sort":  func(args []string) { S.searchSort(args) },
+		"search_range": func(args []string) { S.searchRange(args) },
 	}
 	return S
 }

@@ -12,6 +12,27 @@ const (
 	NONVALIDLINK = 0
 )
 
+var (
+	SearchSortOptions = []string{
+		"top",
+		"rising",
+		"viral",
+		"time",
+	}
+
+	SearchRangeOptions = []string{
+		"day",
+		"week",
+		"month",
+		"year",
+		"all",
+	}
+
+	SEARCHSORT = "top"
+
+	SEARCHRANGE = "all"
+)
+
 // Soundbox : Path map for soundbox -> map[command]path
 var Soundbox = map[string]string{
 	"JEAGER":      "SoundBox/JEAGER.mp3",
