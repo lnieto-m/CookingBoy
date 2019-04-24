@@ -29,13 +29,21 @@ func (S *Sakamoto) search(args []string) {
 }
 
 func (S *Sakamoto) searchSort(args []string) {
-	if len(args) != 0 && avalaibleOption(args[0], SearchSortOptions) {
+	if len(args) != 0 && avalaibleOption(args[0], SearchSortOptions) && args[0] != SEARCHSORT {
+		oldOption := SEARCHSORT
 		SEARCHSORT = args[0]
+		S.discordSession.ChannelMessageSend(S.discordMessageCreate.ChannelID, "Search sort option changed from `"+oldOption+"` to `"+SEARCHSORT+"`.")
+		return
 	}
+	S.displaySearchHelp()
 }
 
 func (S *Sakamoto) searchRange(args []string) {
-	if len(args) != 0 && avalaibleOption(args[0], SearchRangeOptions) {
+	if len(args) != 0 && avalaibleOption(args[0], SearchRangeOptions) && args[0] != SEARCHRANGE {
+		oldOption := SEARCHRANGE
 		SEARCHRANGE = args[0]
+		S.discordSession.ChannelMessageSend(S.discordMessageCreate.ChannelID, "Search range option changed from `"+oldOption+"` to `"+SEARCHRANGE+"`.")
+		return
 	}
+	S.displaySearchHelp()
 }

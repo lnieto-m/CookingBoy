@@ -16,6 +16,9 @@ func (S *Sakamoto) help(args []string) {
 		} else if args[0] == "radio" {
 			S.displayRadioHelp()
 			return
+		} else if args[0] == "search" {
+			S.displaySearchHelp()
+			return
 		}
 	}
 
@@ -34,10 +37,16 @@ func (S *Sakamoto) help(args []string) {
 		Value: "`s!sound <radio_name>`\nType `s!help radio` to display avalaible radios",
 	}
 
+	searchField := &discordgo.MessageEmbedField{
+		Name:  ":mag: Image Search",
+		Value: "`search`,`search_sort`,`search_range`\nType `s!help search` for more details about image search",
+	}
+
 	fields := []*discordgo.MessageEmbedField{
 		musicField,
 		soundBoxField,
 		radioField,
+		searchField,
 	}
 
 	author := &discordgo.MessageEmbedAuthor{
@@ -64,7 +73,7 @@ func (S *Sakamoto) displaySoundBoxHelp() {
 		IconURL: "https://pbs.twimg.com/profile_images/627117609444581380/7YG7kxA4_400x400.png",
 	}
 
-	description := "`JEAGER`,`JEANNE`,`cklair`,`whee`,`bruh`,`oof`,`marionon`,`thomas`,`sanic`,`running`,`SPITONHIM`,`dewae`,`johncena`,`sensibilite`,`qualifie`,`vega`,`rengar`,`quenouille`,`mince`,`troposphere`,`ratz`,`doremi`,`guile`"
+	description := "`JEAGER`,`JEANNE`,`cklair`,`whee`,`bruh`,`oof`,`marionon`,`thomas`,`sanic`,`running`,`SPITONHIM`,`dewae`,`johncena`,`sensibilite`,`qualifie`,`vega`,`rengar`,`quenouille`,`mince`,`troposphere`,`ratz`,`doremi`,`guile`,`zombie`,`ally`"
 
 	soundBoxHelpMessage := &discordgo.MessageEmbed{
 		Title:       "",
@@ -96,4 +105,23 @@ func (S *Sakamoto) displayRadioHelp() {
 	}
 
 	S.discordSession.ChannelMessageSendEmbed(S.discordMessageCreate.ChannelID, radioHelpMessage)
+}
+
+func (S *Sakamoto) displaySearchHelp() {
+
+	author := &discordgo.MessageEmbedAuthor{
+		Name:    "Search Engine using Imgur",
+		IconURL: "https://i.imgur.com/tF3g1JA.jpg",
+	}
+
+	footer := &discordgo.MessageEmbedFooter{
+		Text: "Powered by Imgur.(no lol)",
+	}
+
+	searchHelpMessage := &discordgo.MessageEmbed{
+		Description: "**Current search options:**\nSort: `" + SEARCHSORT + "`\nRange: `" + SEARCHRANGE + "`\nUse `search_sort` and `search_range` to change them.\n\n**Avaliable options:**\nSort:`top`,`rising`,`viral`,`time`\nRange:`day`,`week`,`month`,`year`,`all`",
+		Author:      author,
+		Footer:      footer,
+	}
+	S.discordSession.ChannelMessageSendEmbed(S.discordMessageCreate.ChannelID, searchHelpMessage)
 }

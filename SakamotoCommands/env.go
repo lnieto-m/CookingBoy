@@ -13,6 +13,7 @@ const (
 )
 
 var (
+	// SearchSortOptions list Sorting options for imgur api
 	SearchSortOptions = []string{
 		"top",
 		"rising",
@@ -20,6 +21,7 @@ var (
 		"time",
 	}
 
+	// SearchRangeOptions list time range options for imgur api
 	SearchRangeOptions = []string{
 		"day",
 		"week",
@@ -28,8 +30,10 @@ var (
 		"all",
 	}
 
+	// SEARCHSORT : current imgur sort option
 	SEARCHSORT = "top"
 
+	// SEARCHRANGE : current imgur range option
 	SEARCHRANGE = "all"
 )
 
@@ -58,4 +62,7 @@ var Soundbox = map[string]string{
 	"ratz":        "SoundBox/ratz.mp3",
 	"doremi":      "SoundBox/doremi.mp3",
 	"guile":       "SoundBox/guile.mp3",
+	"zombie":      "SoundBox/zombie.mp3",
+	"ally":        "SoundBox/ally.mp3",
+	"boule":       "SoundBox/la-boule-magique.mp3",
 }
