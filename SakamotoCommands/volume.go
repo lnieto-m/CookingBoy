@@ -23,6 +23,6 @@ func (S *Sakamoto) pause(args []string) {
 			youtubeclient.PauseStates[S.discordMessageCreate.GuildID] = true
 		}
 	} else {
-		log.Println("Couldnot find any song playing. Guild ID :", S.discordMessageCreate.GuildID)
+		log.Println("Could not find any song playing. Guild ID :", S.discordMessageCreate.GuildID)
 	}
 }

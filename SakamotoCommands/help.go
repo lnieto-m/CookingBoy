@@ -34,7 +34,7 @@ func (S *Sakamoto) help(args []string) {
 
 	radioField := &discordgo.MessageEmbedField{
 		Name:  ":headphones: Radio",
-		Value: "`s!sound <radio_name>`\nType `s!help radio` to display avalaible radios",
+		Value: "`s!radio <radio_name>`\nType `s!help radio` to display avalaible radios",
 	}
 
 	searchField := &discordgo.MessageEmbedField{
