@@ -4,6 +4,8 @@ WORKDIR $GOPATH/src/CookingBoy
 
 COPY . .
 
+ENV LC_ALL=C
+
 RUN apt-get update && apt-get install -y --no-install-recommends python3.4
 
 RUN apt-get update && apt-get install -y --no-install-recommends python3-pip
