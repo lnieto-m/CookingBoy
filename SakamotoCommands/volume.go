@@ -1,6 +1,9 @@
 package sakamotocommands
 
-import youtubeclient "CookingBoy/YoutubeClient"
+import (
+	youtubeclient "CookingBoy/YoutubeClient"
+	"log"
+)
 
 // One day
 func (S *Sakamoto) volume(args []string) {
@@ -19,5 +22,7 @@ func (S *Sakamoto) pause(args []string) {
 			youtubeclient.PauseChan[S.discordMessageCreate.GuildID] <- true
 			youtubeclient.PauseStates[S.discordMessageCreate.GuildID] = true
 		}
+	} else {
+		log.Println("Couldnot find any song playing. Guild ID :", S.discordMessageCreate.GuildID)
 	}
 }
